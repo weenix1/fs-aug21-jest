@@ -30,21 +30,18 @@ productsRouter
         req.body,
         { new: true }
       );
-      res.send({ editedProduct });
+      res.status(201).send({ editedProduct });
     } catch (error) {
       next(error);
     }
   })
   .delete("/:id", async (req, res) => {
     try {
-      const reviews = await reviewsModel.deleteMany({
-        productId: req.params.id,
-      });
       const deletedProduct = await ProductModel.findByIdAndDelete(
         req.params.id
       );
       // const deletedReviews = reviews.deleteMany({})
-      res.status(204).send({ message: `${req.params.id} deleted!!` });
+      res.status(204).send({});
     } catch (error) {
       next(error);
     }

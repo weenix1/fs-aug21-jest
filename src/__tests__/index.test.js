@@ -16,7 +16,7 @@ describe("Testing the testing environment", () => {
 describe("Testing the app endpoints", () => {
   beforeAll((done) => {
     console.log("This gets run before all tests in this suite");
-
+    console.log("new mongotest" + process.env.MONGO_URL_TEST);
     mongoose.connect(process.env.MONGO_URL_TEST).then(() => {
       console.log("Connected to the test database");
       done();
@@ -35,6 +35,8 @@ describe("Testing the app endpoints", () => {
     price: 200,
   };
 
+  let _id;
+
   it("should check that the POST /products endpoint creates a new product", async () => {
     const response = await request.post("/products").send(validProduct);
 
@@ -42,6 +44,7 @@ describe("Testing the app endpoints", () => {
     expect(response.body._id).toBeDefined();
     expect(response.body.name).toBeDefined();
     expect(response.body.price).toBeDefined();
+    _id = response.body._id;
   });
 
   it("should check that the GET /products endpoint returns a list of products", async () => {
@@ -52,12 +55,22 @@ describe("Testing the app endpoints", () => {
   });
 
   it("should check that the GET /products with id endpoint returns a specific product", async () => {
-    const response = await request.get("/products/:id");
+    const response = await request.get("/products/" + _id);
 
     expect(response.status).toBe(200);
-    expect(response.body._id).toBe(req.params.id);
-    expect(response.body.length).toBeGreaterThan(0);
-    /*  expect(response.body.price).toBeDefined(); */
+  });
+
+  it("should check that the PUT /products with id endpoint updates a specific product", async () => {
+    const response = await request
+      .put("/products/" + _id)
+      .send({ name: "Test Product", price: 200 });
+
+    expect(response.status).toBe(201);
+  });
+
+  it("should check that the DELETE /products with id endpoint updates a specific product", async () => {
+    const response = await request.delete("/products/" + _id);
+    expect(response.status).toBe(204);
   });
 
   afterAll((done) => {
