@@ -15,8 +15,6 @@ describe("Testing the testing environment", () => {
 
 describe("Testing the app endpoints", () => {
   beforeAll((done) => {
-    console.log("This gets run before all tests in this suite");
-    console.log("new mongotest" + process.env.MONGO_URL_TEST);
     mongoose.connect(process.env.MONGO_URL_TEST).then(() => {
       console.log("Connected to the test database");
       done();
@@ -74,15 +72,25 @@ describe("Testing the app endpoints", () => {
   });
 
   afterAll((done) => {
+    mongoose.connection.dropDatabase().then(() => {
+      console.log("DB dropped");
+
+      mongoose.connection.close().then(() => {
+        done();
+      });
+    });
+  });
+
+  /*  afterAll((done) => {
     mongoose.connection
       .dropDatabase()
       .then(() => {
-        return mongoose.connection.close();
+        mongoose.connection.close();
       })
       .then(() => {
         done();
       });
-  });
+  }); */
 
   // it("should test that the GET /products endpoint returns a list of products", async () => {})
 });
