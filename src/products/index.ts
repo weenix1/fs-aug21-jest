@@ -1,5 +1,5 @@
 import express from "express";
-import { ProductModel } from "./model.js";
+import { ProductModel } from "./model";
 
 const productsRouter = express.Router();
 
@@ -20,7 +20,7 @@ productsRouter
       const product = await ProductModel.findById(req.params.id);
       res.status(200).send({ product });
     } catch (error) {
-      next(error);
+      console.log(error);
     }
   })
   .put("/:id", async (req, res) => {
@@ -32,7 +32,7 @@ productsRouter
       );
       res.status(201).send({ editedProduct });
     } catch (error) {
-      next(error);
+      console.log(error);
     }
   })
   .delete("/:id", async (req, res) => {
@@ -43,7 +43,7 @@ productsRouter
       // const deletedReviews = reviews.deleteMany({})
       res.status(204).send({});
     } catch (error) {
-      next(error);
+      console.log(error);
     }
   });
 

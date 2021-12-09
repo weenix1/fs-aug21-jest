@@ -1,4 +1,4 @@
-import { app } from "../app.js";
+import { app } from "../app";
 import supertest from "supertest";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -15,7 +15,7 @@ describe("Testing the testing environment", () => {
 
 describe("Testing the app endpoints", () => {
   beforeAll((done) => {
-    mongoose.connect(process.env.MONGO_URL_TEST).then(() => {
+    mongoose.connect(process.env.MONGO_URL_TEST!).then(() => {
       console.log("Connected to the test database");
       done();
     });
@@ -33,7 +33,7 @@ describe("Testing the app endpoints", () => {
     price: 200,
   };
 
-  let _id;
+  let _id: string;
 
   it("should check that the POST /products endpoint creates a new product", async () => {
     const response = await request.post("/products").send(validProduct);
@@ -71,7 +71,7 @@ describe("Testing the app endpoints", () => {
     expect(response.status).toBe(204);
   });
 
-  afterAll((done) => {
+  /* afterAll((done) => {
     mongoose.connection.dropDatabase().then(() => {
       console.log("DB dropped");
 
@@ -80,8 +80,8 @@ describe("Testing the app endpoints", () => {
       });
     });
   });
-
-  /*  afterAll((done) => {
+ */
+  afterAll((done) => {
     mongoose.connection
       .dropDatabase()
       .then(() => {
@@ -90,7 +90,7 @@ describe("Testing the app endpoints", () => {
       .then(() => {
         done();
       });
-  }); */
+  });
 
   // it("should test that the GET /products endpoint returns a list of products", async () => {})
 });
